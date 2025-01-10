@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 
 # Function to load and preprocess data
-def load_and_preprocess_data(file_path='https://github.com/kaushik051099/NetworkTrafficAnalysisApp/blob/main/Normal_trafficdata.csv'):
+def load_and_preprocess_data(file_path='https://github.com/kaushik051099/NetworkTrafficAnalysisApp/blob/main/Normal_trafficdata_new.csv'):
     df = pd.read_csv(file_path)
     df['Time'] = pd.to_datetime(df['Time'], unit='s')  # Ensure correct conversion of time
     df.set_index('Time', inplace=True)
