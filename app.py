@@ -78,9 +78,15 @@ plt.xticks(rotation=45)
 plt.legend()
 st.pyplot(plt)
 
-# ARIMA Forecasting
+# ARIMA Model Configuration
 st.write("### Time Series Forecasting with ARIMA")
-model_fit = ARIMA(df_resampled['Length'], order=(1, 1, 0)).fit()
+p = st.slider("ARIMA Order p", 0, 5, 1)
+d = st.slider("ARIMA Order d", 0, 3, 1)
+q = st.slider("ARIMA Order q", 0, 5, 0)
+
+with st.spinner('Fitting ARIMA model...'):
+    model_fit = ARIMA(df_resampled['Length'], order=(p, d, q)).fit()
+
 forecast_steps = 100
 forecast = model_fit.forecast(steps=forecast_steps)
 
@@ -94,14 +100,17 @@ plt.xticks(rotation=45)
 plt.legend()
 st.pyplot(plt)
 
-# Anomaly Detection
+# Anomaly Detection: Interactive threshold
 st.write("### Anomaly Detection")
+threshold_factor = st.slider("Anomaly Detection Sensitivity", 0.5, 3.0, 1.0)
 residuals = df_resampled['Length'] - model_fit.fittedvalues
-threshold = 1 * np.std(residuals)
+threshold = threshold_factor * np.std(residuals)
 anomalies = residuals[residuals.abs() > threshold]
 
+# Visualize residuals and anomalies
 plt.figure(figsize=(10, 6))
 plt.plot(df_resampled.index, residuals, label='Residuals')
+plt.scatter(anomalies.index, anomalies, color='red', label='Anomalies')
 plt.axhline(y=threshold, color='red', linestyle='--', label='Upper Threshold')
 plt.axhline(y=-threshold, color='red', linestyle='--', label='Lower Threshold')
 plt.title('Residuals and Anomalies in Network Traffic')
