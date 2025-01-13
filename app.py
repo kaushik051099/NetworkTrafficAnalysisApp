@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from urllib.error import URLError
 import requests
+from io import StringIO  # Added this import
 
 def load_data(file_path=None):
     """Load and preprocess network traffic data."""
@@ -16,7 +17,7 @@ def load_data(file_path=None):
             response = requests.get(file_path)
             response.raise_for_status()  # Raise an exception for bad status codes
             content = response.content.decode('utf-8', errors='replace')
-            df = pd.read_csv(pd.StringIO(content))
+            df = pd.read_csv(StringIO(content))
         else:
             # Try different encodings for uploaded files
             encodings = ['utf-8', 'latin1', 'iso-8859-1', 'cp1252']
